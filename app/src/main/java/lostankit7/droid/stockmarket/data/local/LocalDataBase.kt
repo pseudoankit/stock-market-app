@@ -10,5 +10,5 @@ import lostankit7.droid.stockmarket.data.local.enitity.CompanyListingEntity
     version = 1
 )
 abstract class LocalDataBase : RoomDatabase() {
-    abstract val dao: StockDao
+    abstract val stockDao: StockDao
 }
