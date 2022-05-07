@@ -2,4 +2,6 @@
     <string name="app_name">StockMarket</string>
     <string name="error_loading_data">Couldn\'t load data</string>
     <string name="search_bar_placeholder">Search....</string>
+    <string name="error_loading_intraday">Couldn\'t load intraday info</string>
+    <string name="error_loading_company_info">Couldn\'t load company info</string>
 </resources>

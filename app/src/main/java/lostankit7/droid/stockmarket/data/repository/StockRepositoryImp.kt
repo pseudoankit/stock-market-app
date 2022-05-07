@@ -4,11 +4,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import lostankit7.droid.stockmarket.R
 import lostankit7.droid.stockmarket.data.csv.CSVParser
+import lostankit7.droid.stockmarket.data.csv.IntradayInfoParser
 import lostankit7.droid.stockmarket.data.local.LocalDataBase
+import lostankit7.droid.stockmarket.data.mapper.toCompanyInfo
 import lostankit7.droid.stockmarket.data.mapper.toCompanyListing
 import lostankit7.droid.stockmarket.data.mapper.toCompanyListingEntity
 import lostankit7.droid.stockmarket.data.remote.StockApi
+import lostankit7.droid.stockmarket.domain.model.CompanyInfo
 import lostankit7.droid.stockmarket.domain.model.CompanyListing
+import lostankit7.droid.stockmarket.domain.model.IntradayInfo
 import lostankit7.droid.stockmarket.domain.repository.StockRepository
 import lostankit7.droid.stockmarket.util.Resource
 import lostankit7.droid.stockmarket.util.StringHandler
@@ -22,6 +26,7 @@ class StockRepositoryImp @Inject constructor(
     db: LocalDataBase,
     private val api: StockApi,
     private val companyListingParser: CSVParser<CompanyListing>,
+    private val intradayInfoParser: IntradayInfoParser,
 ) : StockRepository {
 
     private val dao = db.stockDao
@@ -69,6 +74,41 @@ class StockRepositoryImp @Inject constructor(
                 emit(Resource.Loading(false))
             }
 
+        }
+    }
+
+    override suspend fun getCompanyInfo(symbol: String): Resource<CompanyInfo> {
+        return try {
+            val result = api.getCompanyInfo(symbol)
+            Resource.Success(result.toCompanyInfo())
+        } catch (e: IOException) {
+            e.printStackTrace()
+            Resource.Error(
+                message = StringHandler.ResourceString(R.string.error_loading_company_info)
+            )
+        } catch (e: HttpException) {
+            e.printStackTrace()
+            Resource.Error(
+                message = StringHandler.ResourceString(R.string.error_loading_company_info)
+            )
+        }
+    }
+
+    override suspend fun getIntradayInfo(symbol: String): Resource<List<IntradayInfo>> {
+        return try {
+            val response = api.getIntradayInfo(symbol)
+            val results = intradayInfoParser.parse(response.byteStream())
+            Resource.Success(results)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            Resource.Error(
+                message = StringHandler.ResourceString(R.string.error_loading_intraday)
+            )
+        } catch (e: HttpException) {
+            e.printStackTrace()
+            Resource.Error(
+                message = StringHandler.ResourceString(R.string.error_loading_intraday)
+            )
         }
     }
 }
