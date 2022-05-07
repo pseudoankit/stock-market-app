@@ -21,6 +21,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import lostankit7.droid.stockmarket.R
 import lostankit7.droid.stockmarket.presentation.company_listings.CompanyListingsEvent
 import lostankit7.droid.stockmarket.presentation.company_listings.CompanyListingsViewModel
+import lostankit7.droid.stockmarket.presentation.destinations.CompanyInfoScreenDestination
 
 @Composable
 @Destination(start = true)
@@ -65,7 +66,9 @@ fun CompanyListingsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                //todo navigate to detail screen
+                                navigator.navigate(
+                                    CompanyInfoScreenDestination(company.symbol)
+                                )
                             }
                             .padding(16.dp)
                     )
