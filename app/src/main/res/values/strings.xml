@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">StockMarket</string>
-    <string name="error_loading_data">Couldn't load data</string>
+    <string name="error_loading_data">Couldn\'t load data</string>
+    <string name="search_bar_placeholder">Search....</string>
 </resources>
