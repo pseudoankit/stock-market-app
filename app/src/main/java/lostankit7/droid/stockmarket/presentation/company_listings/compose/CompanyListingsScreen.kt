@@ -1,6 +1,7 @@
 package lostankit7.droid.stockmarket.presentation.company_listings.compose
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -30,45 +31,50 @@ fun CompanyListingsScreen(
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = viewModel.state.isRefreshing)
     val state = viewModel.state
 
-    OutlinedTextField(
-        value = state.searchQuery,
-        onValueChange = {
-            viewModel.onEvent(CompanyListingsEvent.OnSearchQueryChanged(it))
-        },
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
-        placeholder = {
-            Text(text = stringResource(R.string.search_bar_placeholder))
-        },
-        maxLines = 1,
-        singleLine = true
-    )
-    SwipeRefresh(
-        state = swipeRefreshState,
-        onRefresh = {
-            viewModel.onEvent(CompanyListingsEvent.Refresh)
-        }
+    Column(
+        modifier = Modifier.fillMaxSize()
     ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(state.companies.size) { index ->
-                val company = state.companies[index]
-                CompanyItem(
-                    company = company,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            //todo navigate to detail screen
-                        }
-                        .padding(16.dp)
-                )
 
-                if (index < state.companies.size) {
-                    Divider(modifier = Modifier.padding(
-                        horizontal = 16.dp
-                    ))
+        OutlinedTextField(
+            value = state.searchQuery,
+            onValueChange = {
+                viewModel.onEvent(CompanyListingsEvent.OnSearchQueryChanged(it))
+            },
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            placeholder = {
+                Text(text = stringResource(R.string.search_bar_placeholder))
+            },
+            maxLines = 1,
+            singleLine = true
+        )
+        SwipeRefresh(
+            state = swipeRefreshState,
+            onRefresh = {
+                viewModel.onEvent(CompanyListingsEvent.Refresh)
+            }
+        ) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(state.companies.size) { index ->
+                    val company = state.companies[index]
+                    CompanyItem(
+                        company = company,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                //todo navigate to detail screen
+                            }
+                            .padding(16.dp)
+                    )
+
+                    if (index < state.companies.size) {
+                        Divider(modifier = Modifier.padding(
+                            horizontal = 16.dp
+                        ))
+                    }
                 }
             }
         }
